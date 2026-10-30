@@ -99,3 +99,38 @@ body {font-synthesis:none}
   .hero-sub{font-size:.92rem}
 }
 @media(prefers-reduced-motion:reduce){.ticker-track{transform:none!important;will-change:auto}.project-card,.service-card,.btn{transition:none!important}}
+
+
+/* Correção específica: exibir a logomarca ORIGINAL da Dra. Marta inteira,
+   sem recortar o texto, sem transformar a imagem ou ampliar o círculo. */
+.project-image.image-marta{
+  background:radial-gradient(ellipse at center,#69303e 0%,#32121f 76%);
+  display:flex;align-items:center;justify-content:center;
+  padding:18px;
+}
+.project-image.image-marta img{
+  display:block;width:auto!important;height:auto!important;
+  max-width:min(100%, 232px)!important;max-height:100%!important;
+  aspect-ratio:1/1;object-fit:contain!important;
+  padding:0!important;margin:auto;
+  border-radius:50%;
+  transform:none!important;
+  box-shadow:0 12px 32px rgba(0,0,0,.18);
+  filter:none!important;
+}
+.project-image.image-marta::before{display:none!important}
+.project-card:hover .image-marta img{transform:none!important}
+.dialog-image-wrap.badge-preview:has(img[src*="marta-andrade-logo"]) {
+  background:radial-gradient(ellipse at center,#723747,#2e111c 75%);
+}
+.dialog-image-wrap.badge-preview img[src*="marta-andrade-logo"]{
+  display:block;width:auto!important;height:auto!important;
+  max-width:min(76%, 290px)!important;max-height:84%!important;
+  object-fit:contain!important; padding:0!important;
+  border-radius:50%; filter:none!important;
+}
+@media(max-width:570px){
+  .project-image.image-marta{padding:16px}
+  .project-image.image-marta img{max-width:min(100%, 220px)!important;max-height:100%!important}
+  .dialog-image-wrap.badge-preview img[src*="marta-andrade-logo"]{max-width:min(75%, 210px)!important;max-height:80%!important}
+}
