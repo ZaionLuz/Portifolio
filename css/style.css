@@ -24,10 +24,10 @@
 /* Faixa com rolagem controlada pelo JavaScript: ritmo estável em qualquer navegador. */
 .ticker{position:relative;min-height:60px;display:flex;align-items:center}
 .ticker-track{animation:none!important;transform:translate3d(0,0,0);flex-shrink:0}
-.ticker-control{position:absolute;right:12px;top:50%;transform:translateY(-50%);z-index:3;min-width:84px;border-radius:20px;border:1px solid #ed69c8a0;background:#170b25e8;color:#fce1f8;padding:6px 12px;font-size:.7rem;font-weight:700;cursor:pointer;box-shadow:0 2px 12px #0008}
-.ticker-control:hover,.ticker-control:focus-visible{background:#402049;color:#fff}
-.ticker{padding-right:95px}
-@media(max-width:570px){.ticker{padding-right:78px}.ticker-control{min-width:68px;right:6px;font-size:.65rem;padding:7px 8px}}
+
+
+.ticker{padding-right:0}
+@media(max-width:570px){.ticker{padding-right:78px}}
 
 /* updated contact/whatsapp icons */
 .wa-inline-svg,.mail-inline-svg{width:1.05rem;height:1.05rem;display:block;fill:currentColor;flex:none}
@@ -47,3 +47,55 @@
 .header-cta .wa-icon{width:21px;height:21px;color:#fff;}
 .btn .wa-icon{width:21px;height:21px;color:#fff;}
 .contact-link-icon .wa-icon{width:25px;height:25px;color:#fff;}
+
+/* ZAION 3.0 — acabamento e mobile-first */
+html {scroll-padding-top:82px}
+body {font-synthesis:none}
+.header-cta {display:inline-flex;align-items:center;justify-content:center;gap:8px;line-height:1.2}
+.header-cta svg.wa-icon{display:block;width:21px;height:21px;min-width:21px;min-height:21px;flex:none;align-self:center;stroke:none!important;fill:currentColor!important;transform:none}
+.btn .wa-icon{display:block;flex:none;stroke:none!important;fill:currentColor!important}
+.header-inner{min-width:0}
+.brand img,.footer-logo img,.screen-logo,.about-panel img{max-width:100%;height:auto;object-fit:contain;mix-blend-mode:normal!important}
+.ticker{padding-right:0!important}
+.ticker-track{will-change:transform}
+.project-card{transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.project-card:hover{border-color:#d862dcb2}
+.image-badge{isolation:isolate;position:relative}
+.image-badge::before{content:"";position:absolute;width:75%;aspect-ratio:1;border-radius:50%;filter:blur(38px);opacity:.40;pointer-events:none}
+.image-helly::before{background:radial-gradient(circle,#dca557 0%,transparent 70%)}
+.image-marta::before{background:radial-gradient(circle,#f09ab6 0%,transparent 70%)}
+.image-badge img{width:auto;max-width:100%;height:92%;padding:10px!important;object-fit:contain;position:relative;filter:drop-shadow(0 15px 18px #0008)}
+.dialog-image-wrap.badge-preview{display:grid;place-items:center}
+.dialog-image-wrap.badge-preview img{width:auto;max-width:90%;max-height:90%;height:auto;object-fit:contain;filter:drop-shadow(0 18px 28px #0009)}
+.project-image .view-overlay{z-index:2}
+.btn,.header-cta,.filter,.service-card a{transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+@media (max-width:860px){
+  .header-inner{gap:10px}
+  .header-cta{margin-left:auto}
+  .hero-sub{line-height:1.7}
+}
+@media (max-width:570px){
+  .header-cta{display:grid!important;place-items:center!important;font-size:0!important;width:48px;height:48px;padding:0!important;line-height:0!important;gap:0;aspect-ratio:1;flex:none;border-radius:50%}
+  .header-cta svg.wa-icon{width:23px!important;height:23px!important;min-width:23px;min-height:23px;margin:0;align-self:center;justify-self:center;transform:translate(.6px,0)}
+  .menu-toggle{flex:none;width:44px;height:44px}
+  .brand{min-width:0;max-width:52vw;width:170px}
+  .hero{padding-top:32px}
+  .hero-sub{font-size:1rem;line-height:1.7;max-width:34ch}
+  .hero-buttons{gap:11px}
+  .hero-buttons .btn{min-height:56px}
+  .hero-highlights{row-gap:10px}
+  .hero-highlights>span{line-height:1.35}
+  .project-image{height:260px}
+  .image-badge img{height:92%;max-width:90%}
+  .contact-panel{border-radius:20px}
+  .contact-links strong{overflow-wrap:anywhere}
+  .section{padding-block:64px}
+  .project-dialog{max-height:calc(100dvh - 36px);overflow:auto}
+}
+@media (max-width:360px){
+  .brand{width:152px}
+  .header-cta{width:44px;height:44px}
+  h1{font-size:clamp(2.3rem,10vw,3.5rem)}
+  .hero-sub{font-size:.92rem}
+}
+@media(prefers-reduced-motion:reduce){.ticker-track{transform:none!important;will-change:auto}.project-card,.service-card,.btn{transition:none!important}}
