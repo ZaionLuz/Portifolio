@@ -33,3 +33,17 @@
 .wa-inline-svg,.mail-inline-svg{width:1.05rem;height:1.05rem;display:block;fill:currentColor;flex:none}
 .btn .wa-inline-svg{width:1rem;height:1rem}
 .contact-link-icon .wa-inline-svg,.contact-link-icon .mail-inline-svg{width:1.1rem;height:1.1rem}
+
+/* Outubro 2026 — Identidade ZAION transparente e WhatsApp corrigido */
+.brand img,.footer-logo img,.screen-logo{mix-blend-mode:normal!important;object-fit:contain!important;object-position:center left;height:auto!important;background:transparent!important;}
+.wa-icon{width:20px;height:20px;display:inline-block;fill:currentColor!important;stroke:none!important;flex:none;vertical-align:middle;}
+.header-cta .wa-icon{width:21px;height:21px;color:#fff;}
+.btn .wa-icon{width:21px;height:21px;color:#fff;}
+.contact-link-icon .wa-icon{width:25px;height:25px;color:#fff;}
+
+/* Outubro 2026 — Identidade ZAION transparente e WhatsApp corrigido */
+.brand img,.footer-logo img,.screen-logo{mix-blend-mode:normal!important;object-fit:contain!important;object-position:center left;height:auto!important;background:transparent!important;}
+.wa-icon{width:20px;height:20px;display:inline-block;fill:currentColor!important;stroke:none!important;flex:none;vertical-align:middle;}
+.header-cta .wa-icon{width:21px;height:21px;color:#fff;}
+.btn .wa-icon{width:21px;height:21px;color:#fff;}
+.contact-link-icon .wa-icon{width:25px;height:25px;color:#fff;}
