@@ -1,0 +1,39 @@
+name: Prepare portfolio project images
+on:
+  push:
+    branches: [portfolio-assets-prep]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: portfolio-project-images-prep
+  cancel-in-progress: true
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install capture dependencies
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+          python -m pip install --disable-pip-version-check Pillow==11.3.0
+      - name: Capture the actual public dentist page
+        run: node scripts/capture-marta.mjs
+      - name: Preserve review files
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-project-images
+          path: |
+            capture-review/
+            assets/marta-andrade-site.webp
+          retention-days: 7
+          if-no-files-found: ignore
