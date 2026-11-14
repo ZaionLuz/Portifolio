@@ -92,6 +92,51 @@ async function settleImages(page) {
     if (document.fonts) await document.fonts.ready;
   });
 }
+
+const colorSelectors = ['body', '#site-header', '#contact-form', '#contact-name', '#contact-service',
+  '#contact-message', '[data-gh-query]', '[data-gh-run]', '#github-dashboard', '.site-footer'];
+async function themeColors(page) {
+  return page.evaluate((selectors) => Object.fromEntries(selectors.map((selector) => {
+    const element = document.querySelector(selector);
+    if (!element) throw new Error('Missing theme probe: ' + selector);
+    const style = getComputedStyle(element);
+    return [selector, [style.color, style.backgroundColor, style.borderTopColor]];
+  })), colorSelectors);
+}
+// A MutationObserver starts the measurement in the same render cycle as the theme commit,
+// rather than letting Playwright polling conceal a slow offscreen color transition.
+async function toggleAndSample(page, scrollToFooter = false) {
+  return page.evaluate(({ selectors, scrollToFooter }) => new Promise((resolve, reject) => {
+    const root = document.documentElement;
+    const before = root.dataset.theme;
+    const deadline = setTimeout(() => { observer.disconnect(); reject(new Error('Theme did not commit')); }, 2000);
+    const observer = new MutationObserver(() => {
+      if (root.dataset.theme === before) return;
+      observer.disconnect();
+      if (scrollToFooter) document.querySelector('.site-footer').scrollIntoView({ behavior:'instant', block:'end' });
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        clearTimeout(deadline);
+        const colors = Object.fromEntries(selectors.map((selector) => {
+          const style = getComputedStyle(document.querySelector(selector));
+          return [selector, [style.color, style.backgroundColor, style.borderTopColor]];
+        }));
+        resolve({ theme:root.dataset.theme, colors, scrollY:window.scrollY });
+      }));
+    });
+    observer.observe(root, { attributes:true, attributeFilter:['data-theme'] });
+    document.querySelector('#theme-toggle').click();
+  }), { selectors:colorSelectors, scrollToFooter });
+}
+async function assertAtomicTheme(page, expected, scrollToFooter = false) {
+  const early = await toggleAndSample(page, scrollToFooter);
+  expect(early.theme).toBe(expected);
+  await page.waitForTimeout(700);
+  expect(await themeColors(page)).toEqual(early.colors);
+  await expect(page.locator('html')).not.toHaveClass(/theme-switching/);
+  await expect(page.locator('html')).not.toHaveAttribute('data-theme-transition');
+  return early;
+}
+
 test.beforeEach(async ({ page }) => {
   const found = []; errors.set(page, found);
   page.on('pageerror', (error) => found.push(error.message));
@@ -110,6 +155,24 @@ for (const viewport of [
     await ready(page);
     await expect(page.locator('[data-project-card]')).toHaveCount(4);
     await expect(page.locator('[data-service-card]')).toHaveCount(8);
+    await expect(page.locator('#header-github')).toBeVisible();
+    await expect(page.locator('#language-toggle')).toBeVisible();
+    await expect(page.locator('#theme-toggle')).toBeVisible();
+    const controls = await page.locator('.header-actions > :visible').evaluateAll((nodes) => nodes.map((node) => {
+      const r = node.getBoundingClientRect();
+      return { x:r.x, right:r.right, y:r.y, bottom:r.bottom, width:r.width, height:r.height };
+    }));
+    for (let i = 0; i < controls.length; i += 1) {
+      expect(controls[i].x).toBeGreaterThanOrEqual(0);
+      expect(controls[i].right).toBeLessThanOrEqual(viewport.width + 1);
+      expect(controls[i].width).toBeGreaterThanOrEqual(32);
+      expect(controls[i].height).toBeGreaterThanOrEqual(32);
+      for (let j = i + 1; j < controls.length; j += 1) {
+        const a = controls[i], b = controls[j];
+        const overlaps = Math.min(a.right,b.right)-Math.max(a.x,b.x)>1 && Math.min(a.bottom,b.bottom)-Math.max(a.y,b.y)>1;
+        expect(overlaps).toBe(false);
+      }
+    }
     await noOverflow(page);
     await page.locator('#contact').scrollIntoViewIfNeeded();
     await expect(page.locator('#contact-name')).toBeVisible();
@@ -346,9 +409,11 @@ test('desktop review screenshots are captured in a real browser', async ({ page 
   await ready(page);
   await settleImages(page);
   await page.screenshot({ path: testInfo.outputPath('desktop-dark-1440.png'), fullPage: true, animations: 'disabled' });
+  logPreview('DARKCRIMSON', await page.screenshot({type:'jpeg',quality:45,animations:'disabled'}));
   await page.locator('#theme-toggle').click();
   await page.locator('#language-toggle').click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  logPreview('LIGHTVIOLET', await page.screenshot({type:'jpeg',quality:45,animations:'disabled'}));
   await page.screenshot({ path: testInfo.outputPath('desktop-light-en-1440.png'), fullPage: true, animations: 'disabled' });
   await page.setViewportSize({ width: 1100, height: 780 });
   await page.locator('#home').scrollIntoViewIfNeeded();
@@ -359,6 +424,9 @@ test('desktop review screenshots are captured in a real browser', async ({ page 
   logPreview('PROJECTS', await page.screenshot({ type:'jpeg', quality:45, animations:'disabled' }));
   await page.locator('.site-footer').scrollIntoViewIfNeeded();
   logPreview('FOOTER', await page.screenshot({ type:'jpeg', quality:45, animations:'disabled' }));
+  logPreview('LIGHTFOOTER', await page.screenshot({type:'jpeg',quality:45,animations:'disabled'}));
+  await page.locator('#github-dashboard').scrollIntoViewIfNeeded();
+  logPreview('GITHUBLIGHT', await page.screenshot({type:'jpeg',quality:45,animations:'disabled'}));
 });
 test('mobile review screenshot is captured in a real browser', async ({ page }, testInfo) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -367,4 +435,130 @@ test('mobile review screenshot is captured in a real browser', async ({ page }, 
   await page.screenshot({ path: testInfo.outputPath('mobile-dark-390.png'), fullPage: true, animations: 'disabled' });
   const jpeg = await page.screenshot({ path: testInfo.outputPath('mobile-review.jpg'), type: 'jpeg', quality: 40, animations: 'disabled' });
   logPreview('MOBILE', jpeg);
+});
+
+test('English destination button translates the page and returns to Portuguese', async ({ page }) => {
+  await ready(page);
+  const button = page.locator('#language-toggle');
+  const label = button.locator('[data-language-label]');
+  await expect(label).toHaveText('EN');
+  await expect(button).toHaveAccessibleName(/inglês/i);
+  await button.click();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await expect(label).toHaveText('PT');
+  await expect(button).toHaveAccessibleName(/portuguese/i);
+  await expect(page.locator('#contact-form label[for="contact-name"]')).toHaveText('Your name');
+  await expect(page.locator('#contact-form button[type="submit"]')).toContainText(/WhatsApp/i);
+  await expect.poll(() => new URL(page.url()).searchParams.get('lang')).toBe('en');
+  await page.locator('#command-open').click();
+  await expect(page.locator('#command-dialog')).toContainText(/where|search|navigate/i);
+  await page.keyboard.press('Escape');
+  await button.click();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'pt-BR');
+  await expect(label).toHaveText('EN');
+  await expect(page.locator('#contact-form label[for="contact-name"]')).toHaveText('Seu nome');
+  await expect.poll(() => new URL(page.url()).searchParams.get('lang')).toBe('pt');
+});
+test('brand is only Z, profile button points to the account and footer omits portfolio source', async ({ page }) => {
+  await ready(page);
+  const visibleBrand = await page.locator('.header-wordmark').evaluate((node) => {
+    const clone = node.cloneNode(true);
+    clone.querySelectorAll('.sr-only').forEach((element) => element.remove());
+    return clone.textContent.trim();
+  });
+  expect(visibleBrand).toBe('Z');
+  await expect(page.locator('.header-wordmark .accent-text')).toHaveCount(0);
+  const github = page.locator('#header-github');
+  await expect(github).toBeVisible();
+  await expect(github).toHaveAttribute('href', 'https://github.com/ZaionLuz');
+  await expect(github).toHaveAttribute('target', '_blank');
+  await expect(github).toHaveAttribute('rel', /noopener/);
+  await expect(github).toHaveAccessibleName(/github/i);
+  await expect(page.locator('.site-footer a[href*="github.com/ZaionLuz/Portifolio"]')).toHaveCount(0);
+  await expect(page.locator('.site-footer')).not.toContainText(/ver.*código|view.*(code|source)/i);
+});
+test('favicon is a loadable transparent Z without a square background', async ({ page }) => {
+  await ready(page);
+  const iconURL = await page.locator('link[rel="icon"]').getAttribute('href');
+  expect(iconURL).toMatch(/favicon\.svg$/);
+  const response = await page.request.get(new URL(iconURL, BASE).href);
+  expect(response.ok()).toBe(true);
+  const markup = await response.text();
+  expect(markup).toContain('<svg');
+  expect(markup).not.toMatch(/<(rect|circle)\b/i);
+  const pixels = await page.evaluate(async (url) => {
+    const image = new Image(); image.src = url; await image.decode();
+    const canvas = document.createElement('canvas'); canvas.width = 64; canvas.height = 64;
+    const ctx = canvas.getContext('2d'); ctx.drawImage(image,0,0,64,64);
+    const sample = (x,y) => Array.from(ctx.getImageData(x,y,1,1).data);
+    let opaque = 0;
+    const rgba = ctx.getImageData(0,0,64,64).data;
+    for (let i=3;i<rgba.length;i+=4) if (rgba[i]>127) opaque++;
+    return {corners:[sample(0,0),sample(63,0),sample(0,63),sample(63,63)],opaque};
+  }, new URL(iconURL,BASE).href);
+  expect(pixels.corners.map((rgba) => rgba[3])).toEqual([0,0,0,0]);
+  expect(pixels.opaque).toBeGreaterThan(100);
+  expect(pixels.opaque).toBeLessThan(2500);
+});
+for (const location of ['footer', 'top then footer']) {
+  test('native theme reveal has no delayed lower-page colors from ' + location, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion:'no-preference' });
+    await ready(page);
+    await expect(page.locator('#intro')).not.toBeVisible();
+    const supported = await page.evaluate(() => typeof document.startViewTransition === 'function');
+    expect(supported).toBe(true);
+    await page.evaluate(() => {
+      window.__themeNativeCalls = 0;
+      const native = document.startViewTransition.bind(document);
+      document.startViewTransition = (...args) => { window.__themeNativeCalls++; return native(...args); };
+    });
+    for (const target of ['light','dark']) {
+      await page.evaluate((position) => {
+        if (position === 'footer') document.querySelector('.site-footer').scrollIntoView({behavior:'instant',block:'end'});
+        else window.scrollTo({top:0,behavior:'instant'});
+      }, location);
+      await page.waitForTimeout(100);
+      const before = await themeColors(page);
+      const sample = await assertAtomicTheme(page, target, location === 'top then footer');
+      expect(sample.scrollY).toBeGreaterThan(1000);
+      expect(sample.colors.body).not.toEqual(before.body);
+    }
+    expect(await page.evaluate(() => window.__themeNativeCalls)).toBe(2);
+  });
+}
+for (const scenario of ['unsupported', 'reduced motion']) {
+  test('theme change remains atomic with ' + scenario, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion:scenario === 'unsupported' ? 'no-preference' : 'reduce' });
+    await ready(page);
+    await expect(page.locator('#intro')).not.toBeVisible();
+    await page.evaluate((mode) => {
+      window.__themeNativeCalls = 0;
+      const native = document.startViewTransition && document.startViewTransition.bind(document);
+      if (mode === 'unsupported') document.startViewTransition = undefined;
+      else if (native) document.startViewTransition = (...args) => { window.__themeNativeCalls++; return native(...args); };
+      document.querySelector('.site-footer').scrollIntoView({behavior:'instant',block:'end'});
+    }, scenario);
+    await page.waitForTimeout(100);
+    for (const target of ['light','dark']) await assertAtomicTheme(page,target);
+    expect(await page.evaluate(() => window.__themeNativeCalls)).toBe(0);
+  });
+}
+test('three rapid native theme toggles finish at the requested theme and clean up', async ({ page }) => {
+  const consoleErrors = [];
+  page.on('console', (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); });
+  await page.emulateMedia({ reducedMotion:'no-preference' });
+  await ready(page);
+  await expect(page.locator('#intro')).not.toBeVisible();
+  await page.evaluate(() => {
+    const button = document.querySelector('#theme-toggle');
+    button.click(); setTimeout(() => button.click(),30); setTimeout(() => button.click(),60);
+  });
+  await expect(page.locator('html')).toHaveAttribute('data-theme','light',{timeout:1800});
+  await expect(page.locator('html')).not.toHaveClass(/theme-switching/,{timeout:1800});
+  await expect(page.locator('html')).not.toHaveAttribute('data-theme-transition');
+  expect(await page.evaluate(() => localStorage.getItem('zaion.theme'))).toBe('light');
+  const before = await themeColors(page);
+  await page.waitForTimeout(700);
+  expect(await themeColors(page)).toEqual(before);
+  expect(consoleErrors).toEqual([]);
 });

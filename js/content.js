@@ -21,7 +21,7 @@
     "assets": {
       "logo": "assets/zaion-logo-transparente.png",
       "originalLogo": "assets/zaion-logo-original.png",
-      "favicon": "assets/favicon.png",
+      "favicon": "assets/favicon.svg",
       "socialImage": "assets/og-zaion.jpg",
       "photo": "assets/zaion-portrait.png"
     },
@@ -594,9 +594,13 @@
       "footer.tagline": "Ideias em soluções reais.",
       "footer.location": "Aracati, Ceará · Brasil",
       "footer.rights": "Zaion",
-      "footer.source": "Código do portfólio",
       "footer.madeBy": "Criado por Zaion Araújo",
-      "footer.colophon": "Design e desenvolvimento com identidade própria."
+      "footer.colophon": "Design e desenvolvimento com identidade própria.",
+      "header.github": "GitHub",
+      "header.githubAria": "Abrir perfil de Zaion no GitHub",
+      "language.toEnglish": "Ver todo o site em inglês",
+      "language.toPortuguese": "Ver todo o site em português",
+      "language.switch": "Trocar o idioma do site"
     },
     "en": {
       "nav.home": "Home",
@@ -822,9 +826,13 @@
       "footer.tagline": "Ideas into real solutions.",
       "footer.location": "Aracati, Ceará · Brazil",
       "footer.rights": "Zaion",
-      "footer.source": "Portfolio source",
       "footer.madeBy": "Created by Zaion Araújo",
-      "footer.colophon": "Design and development with an identity of their own."
+      "footer.colophon": "Design and development with an identity of their own.",
+      "header.github": "GitHub",
+      "header.githubAria": "Open Zaion's GitHub profile",
+      "language.toEnglish": "View the entire website in English",
+      "language.toPortuguese": "View the entire website in Portuguese",
+      "language.switch": "Switch the website language"
     }
   }
 };

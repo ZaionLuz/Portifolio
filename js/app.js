@@ -7,7 +7,7 @@
   var keys = { theme: "zaion.theme", lang: "zaion.lang", focus: "zaion.focus", motion: "zaion.motion" };
   var state = { lang: "pt", theme: "dark", focus: "all", filter: "all", active: "home", flipped: false, reduced: false, paused: false, osReduced: false, dialog: null, project: null, projectTab: "about", zoomed: false, commands: [], commandIndex: 0, commandOrigin: null, formStatus: null, submitting: false, heroVisible: true, dashboardReady: false, initialised: false };
   var returnFocus = new Map(), timers = {}, sectionObserver = null, heroObserver = null, scrollFrame = 0;
-  var themeTransition = null, themeVersion = 0, wordIndex = 0, wordList = [], unlockStyles = null;
+  var themeTransition = null, themeAnimation = null, themeTarget = null, themeVersion = 0, wordIndex = 0, wordList = [], unlockStyles = null;
   var reduceMedia = null, themeMedia = null, explicitTheme = false;
   function normalise(value) { return String(value == null ? "" : value).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim(); }
   function escapeHTML(value) { return String(value == null ? "" : value).replace(/[&<>"']/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]; }); }
@@ -76,26 +76,89 @@
     state.theme = choose(theme, ["dark", "light"], "dark");
     doc.documentElement.setAttribute("data-theme", state.theme);
     doc.documentElement.style.colorScheme = state.theme;
-    var meta = $('meta[name="theme-color"]'); if (meta) meta.content = state.theme === "dark" ? "#080710" : "#fbf8ff";
+    var meta = $('meta[name="theme-color"]'); if (meta) meta.content = state.theme === "dark" ? "#100609" : "#fbf8ff";
     themeButton();
   }
+  function flushThemeStyles() {
+    // Commit final variables for the whole document before capturing the new view.
+    void doc.documentElement.offsetWidth;
+    if (doc.body && typeof global.getComputedStyle === "function") global.getComputedStyle(doc.body).backgroundColor;
+  }
+  function releaseTheme(version) {
+    if (version !== themeVersion) return;
+    global.clearTimeout(timers.themeSafety);
+    doc.documentElement.classList.remove("theme-switching");
+    doc.documentElement.removeAttribute("data-theme-transition");
+    themeTransition = null; themeAnimation = null; themeTarget = null;
+  }
+  function cancelThemeVisuals() {
+    if (themeAnimation && typeof themeAnimation.cancel === "function") {
+      try { themeAnimation.cancel(); } catch (_) {}
+    }
+    if (themeTransition && typeof themeTransition.skipTransition === "function") {
+      try { themeTransition.skipTransition(); } catch (_) {}
+    }
+    themeAnimation = null; themeTransition = null;
+  }
   function toggleTheme(event) {
-    var next = state.theme === "dark" ? "light" : "dark";
+    var next = (themeTarget || state.theme) === "dark" ? "light" : "dark";
     explicitTheme = true; save(keys.theme, next);
     themeVersion += 1; var version = themeVersion;
-    if (themeTransition && typeof themeTransition.skipTransition === "function") themeTransition.skipTransition();
-    if (state.reduced || typeof doc.startViewTransition !== "function") { applyTheme(next); return; }
+    cancelThemeVisuals(); global.clearTimeout(timers.themeSafety);
+    themeTarget = next;
+    doc.documentElement.classList.add("theme-switching");
+    doc.documentElement.setAttribute("data-theme-transition", "pending");
+    flushThemeStyles();
+    var committed = false;
+    function commit() {
+      if (version !== themeVersion || committed) return;
+      applyTheme(next); flushThemeStyles(); committed = true;
+    }
+    if (state.reduced || typeof doc.startViewTransition !== "function") {
+      commit(); releaseTheme(version); return;
+    }
     var button = $("#theme-toggle"), rect = button ? button.getBoundingClientRect() : { left: global.innerWidth / 2, top: 20, width: 0, height: 0 };
     var x = event && event.clientX ? event.clientX : rect.left + rect.width / 2;
     var y = event && event.clientY ? event.clientY : rect.top + rect.height / 2;
     var radius = Math.hypot(Math.max(x, global.innerWidth - x), Math.max(y, global.innerHeight - y));
     try {
-      themeTransition = doc.startViewTransition(function () { applyTheme(next); });
-      themeTransition.ready.then(function () {
-        if (version !== themeVersion || state.reduced || typeof doc.documentElement.animate !== "function") return;
-        try { doc.documentElement.animate({ clipPath: ["circle(0px at " + x + "px " + y + "px)", "circle(" + radius + "px at " + x + "px " + y + "px)"] }, { duration: 460, easing: "cubic-bezier(.2,.7,.2,1)", pseudoElement: "::view-transition-new(root)" }); } catch (_) { /* Native fade remains available. */ }
-      }).catch(function () {});
-    } catch (_) { applyTheme(next); }
+      var transition = doc.startViewTransition(commit);
+      themeTransition = transition;
+      // A watchdog prevents a stuck state if a browser suspends its transition tree.
+      timers.themeSafety = global.setTimeout(function () {
+        if (version !== themeVersion) return;
+        cancelThemeVisuals(); commit(); releaseTheme(version);
+      }, 1200);
+      transition.ready.then(function () {
+        if (version !== themeVersion) return;
+        if (state.reduced || typeof doc.documentElement.animate !== "function") {
+          if (typeof transition.skipTransition === "function") transition.skipTransition();
+          commit(); releaseTheme(version); return;
+        }
+        doc.documentElement.setAttribute("data-theme-transition", "revealing");
+        try {
+          var animation = doc.documentElement.animate(
+            { clipPath: ["circle(0px at " + x + "px " + y + "px)", "circle(" + radius + "px at " + x + "px " + y + "px)"] },
+            { duration: 460, easing: "cubic-bezier(.2,.7,.2,1)", fill: "both", pseudoElement: "::view-transition-new(root)" }
+          );
+          themeAnimation = animation;
+          animation.finished.then(function () { releaseTheme(version); }, function () { releaseTheme(version); });
+        } catch (_) {
+          if (typeof transition.skipTransition === "function") transition.skipTransition();
+          commit(); releaseTheme(version);
+        }
+      }, function () {
+        if (version !== themeVersion) return;
+        commit(); releaseTheme(version);
+      });
+      transition.finished.then(function () {
+        if (version !== themeVersion) return;
+        commit(); releaseTheme(version);
+      }, function () {
+        if (version !== themeVersion) return;
+        commit(); releaseTheme(version);
+      });
+    } catch (_) { commit(); releaseTheme(version); }
   }
   function motionButtons() {
     $$("[data-motion-toggle]").forEach(function (button) {
@@ -426,7 +489,17 @@
     translate(doc); updateCards(); updateClock(); resetWords(); themeButton(); motionButtons();
     var currentCard = $("#identity-card");
     if (currentCard) currentCard.setAttribute("aria-label", state.flipped ? L("Voltar à frente do cartão de Zaion", "Return to the front of Zaion's card") : t("hero.flipAria"));
-    var languageButton = $("#language-toggle"); if (languageButton) { languageButton.setAttribute("aria-label", t("palette.switchLanguage")); languageButton.title = t("palette.switchLanguage"); setText($("[data-language-code], [data-language-label]",languageButton), state.lang.toUpperCase()); }
+    var languageButton = $("#language-toggle");
+    if (languageButton) {
+      var destination = state.lang === "pt" ? "en" : "pt";
+      var destinationLabel = $("[data-language-code], [data-language-label]", languageButton);
+      var languageAction = t(destination === "en" ? "language.toEnglish" : "language.toPortuguese");
+      languageButton.setAttribute("aria-label", languageAction);
+      languageButton.setAttribute("data-t-aria-label", destination === "en" ? "language.toEnglish" : "language.toPortuguese");
+      languageButton.title = languageAction;
+      setText(destinationLabel, destination.toUpperCase());
+      if (destinationLabel) destinationLabel.setAttribute("lang", destination === "pt" ? "pt-BR" : "en");
+    }
     if (state.project && state.dialog && state.dialog.id === "project-dialog") renderProject();
     if (state.dialog && state.dialog.id === "command-dialog") renderCommands();
     setProjectFilter(state.filter); renderFormStatus(); updateMessageCounter();
