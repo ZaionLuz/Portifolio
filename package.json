@@ -1,0 +1,15 @@
+{
+  "name": "zaion-portfolio",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Static portfolio with optional browser validation; no production build required.",
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.65.1"
+  }
+}
