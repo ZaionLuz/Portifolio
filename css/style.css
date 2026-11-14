@@ -106,7 +106,7 @@ html:not(.app-ready) #nav-pill{display:none}
 .hero-mini-note>span:first-child{color:var(--accent)}
 .identity-column{max-width:380px;width:100%;justify-self:center}
 .identity-stage{position:relative;perspective:1100px;max-width:360px;margin-inline:auto}
-.identity-orbit{position:absolute;pointer-events:none;inset:35px -25px;border:1px solid var(--line-strong);border-radius:28px;rotate:-6deg;opacity:.5}
+.identity-orbit{position:absolute;pointer-events:none;inset:35px 0;border:1px solid var(--line-strong);border-radius:28px;rotate:-6deg;opacity:.5}
 .identity-orbit--two{inset:15px -12px;rotate:5deg;border-style:dashed;opacity:.38}
 .identity-card{position:relative;display:block;width:100%;padding:0;aspect-ratio:.81;transform-style:preserve-3d;transform:rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg));border-radius:24px;text-align:left;outline-offset:9px;background:none;isolation:isolate}
 .identity-flipper{position:absolute;inset:0;display:block;transform-style:preserve-3d;transition:transform .72s cubic-bezier(.2,.7,.25,1)}
@@ -330,7 +330,7 @@ html:not(.app-ready) #nav-pill{display:none}
 .service-link:hover{color:var(--accent)}
 /* Contact */
 .contact-section{isolation:isolate;overflow:visible}
-.contact-glow{position:absolute;inset:0 -50px -10px;pointer-events:none;z-index:-1;background:radial-gradient(ellipse at 0 75%,rgba(var(--accent-rgb),.06),transparent 55%)}
+.contact-glow{position:absolute;inset:0 0 -10px;pointer-events:none;z-index:-1;background:radial-gradient(ellipse at 0 75%,rgba(var(--accent-rgb),.06),transparent 55%)}
 .contact-section .section-heading{max-width:980px}
 .contact-section h2{font-size:clamp(2.5rem,5.5vw,5rem)}
 .contact-grid{display:grid;grid-template-columns:.9fr 1fr;gap:100px;align-items:start}
@@ -636,7 +636,7 @@ html.motion-reduced [data-reveal]{opacity:1;translate:none}
  .hero-mini-note{font-size:8px;margin-top:20px}
  .identity-column{max-width:340px;width:calc(100% - 22px)}
  .identity-stage{max-width:320px}
- .identity-orbit--one{inset:30px -13px}
+ .identity-orbit--one{inset:30px -6px}
  .identity-orbit--two{inset:15px -6px}
  .identity-under{gap:3px;padding-top:22px}
  .local-time{font-size:7px;gap:5px}
