@@ -25,6 +25,8 @@ jobs:
           npm install --no-audit --no-fund
           npx playwright install --with-deps chromium
           python -m pip install --disable-pip-version-check Pillow==11.3.0
+      - name: Inspect the public GitHub avatar
+        run: node scripts/inspect-avatar.mjs
       - name: Capture the actual public dentist page
         run: node scripts/capture-marta.mjs
       - name: Preserve review files
