@@ -76,7 +76,7 @@
     state.theme = choose(theme, ["dark", "light"], "dark");
     doc.documentElement.setAttribute("data-theme", state.theme);
     doc.documentElement.style.colorScheme = state.theme;
-    var meta = $('meta[name="theme-color"]'); if (meta) meta.content = state.theme === "dark" ? "#0c0d10" : "#f5f2ed";
+    var meta = $('meta[name="theme-color"]'); if (meta) meta.content = state.theme === "dark" ? "#080710" : "#fbf8ff";
     themeButton();
   }
   function toggleTheme(event) {

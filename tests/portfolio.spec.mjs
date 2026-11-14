@@ -131,6 +131,8 @@ test('theme and language persist through reload and keep the nested base path', 
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   expect(new URL(page.url()).pathname).toBe('/Portifolio/');
   await expect(page.locator('#contact-form')).toContainText(/name|service/i);
+  await expect(page.locator('.footer-wordmark')).toHaveText('Zaion');
+  await expect(page.locator('.site-footer')).not.toContainText(/Soluções Digitais|Digital Solutions/);
 });
 test('focus selection changes actual section and project reading order', async ({ page }) => {
   await ready(page);
@@ -179,7 +181,8 @@ test('project dialog preserves project status and returns focus on close', async
   await trigger.click();
   await expect(page.locator('#project-dialog')).toBeVisible();
   await expect(page.locator('#project-dialog-title')).toContainText('Maria Marta');
-  await expect(page.locator('#project-detail-content')).toContainText(/proposta|estudo/i);
+  await expect(page.locator('#project-detail-content .status-badge')).toHaveText('Site publicado');
+  await expect(page.locator('#project-detail-content img')).toHaveAttribute('src', /marta-andrade-site\.webp$/);
   await page.keyboard.press('Escape');
   await expect(page.locator('#project-dialog')).not.toBeVisible();
   await expect(trigger).toBeFocused();
@@ -328,6 +331,9 @@ test('all local images load and print mode contains the factual résumé', async
   await settleImages(page);
   const broken = await page.locator('img').evaluateAll((nodes) => nodes.filter((img) => !img.complete || !img.naturalWidth).map((img) => img.getAttribute('src')));
   expect(broken).toEqual([]);
+  await expect(page.locator('#identity-card img')).toHaveAttribute('src', 'assets/zaion-portrait.png');
+  await expect(page.locator('[data-project-card="helly"] picture source')).toHaveCount(0);
+  await expect(page.locator('[data-project-card="marta"] img')).toHaveAttribute('src', 'assets/marta-andrade-site.webp');
   await page.emulateMedia({ media: 'print' });
   await expect(page.locator('#print-cv')).toBeVisible();
   await expect(page.locator('#print-cv')).toContainText('Zaion Araújo');
@@ -348,6 +354,11 @@ test('desktop review screenshots are captured in a real browser', async ({ page 
   await page.locator('#home').scrollIntoViewIfNeeded();
   const jpeg = await page.screenshot({ path: testInfo.outputPath('desktop-review.jpg'), type: 'jpeg', quality: 35, animations: 'disabled' });
   logPreview('DESKTOP', jpeg);
+  await page.setViewportSize({ width: 1200, height: 1000 });
+  await page.locator('#projects').scrollIntoViewIfNeeded();
+  logPreview('PROJECTS', await page.screenshot({ type:'jpeg', quality:45, animations:'disabled' }));
+  await page.locator('.site-footer').scrollIntoViewIfNeeded();
+  logPreview('FOOTER', await page.screenshot({ type:'jpeg', quality:45, animations:'disabled' }));
 });
 test('mobile review screenshot is captured in a real browser', async ({ page }, testInfo) => {
   await page.setViewportSize({ width: 390, height: 844 });

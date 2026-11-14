@@ -1,4 +1,4 @@
-/* Original portfolio content. Facts preserved from ZaionLuz/Portifolio. */
+/* Original portfolio content. Facts and requested assets for Zaion Araújo. */
 (function (global) {
   'use strict';
   global.ZaionContent = {
@@ -22,7 +22,8 @@
       "logo": "assets/zaion-logo-transparente.png",
       "originalLogo": "assets/zaion-logo-original.png",
       "favicon": "assets/favicon.png",
-      "socialImage": "assets/og-zaion.jpg"
+      "socialImage": "assets/og-zaion.jpg",
+      "photo": "assets/zaion-portrait.png"
     },
     "education": {
       "pt": "Estudante de Ciência da Computação",
@@ -36,7 +37,8 @@
       "Java",
       "Git / GitHub",
       "Design Digital"
-    ]
+    ],
+    "photo": "assets/zaion-portrait.png"
   },
   "projects": [
     {
@@ -88,50 +90,51 @@
     },
     {
       "id": "marta",
-      "kind": "design",
+      "kind": "web",
       "title": "Dra. Maria Marta Andrade",
-      "image": "assets/marta-andrade-logo.webp",
+      "image": "assets/marta-andrade-site.webp",
       "imageAlt": {
-        "pt": "Proposta de marca com monograma e tons vinho rosado para a Dra. Maria Marta Andrade",
-        "en": "Proposed monogram identity in rose and burgundy tones for Dr. Maria Marta Andrade"
+        "pt": "Captura do site do consultório da Dra. Maria Marta Andrade, com apresentação e agendamento",
+        "en": "Website screenshot of Dr. Maria Marta Andrade's dental practice, showing its introduction and appointment links"
       },
-      "statusCode": "proposal",
+      "statusCode": "website",
       "status": {
-        "pt": "Proposta visual",
-        "en": "Visual proposal"
+        "pt": "Site publicado",
+        "en": "Published website"
       },
       "summary": {
-        "pt": "Um estudo de marca delicado para um consultório odontológico.",
-        "en": "A refined identity study for a dental practice."
+        "pt": "Um site para apresentar o consultório odontológico, os tratamentos e os caminhos de contato.",
+        "en": "A website introducing the dental practice, treatments and ways to get in touch."
       },
       "detail": {
-        "pt": "Proposta de identidade visual para um consultório odontológico, com monograma, tons vinho rosado e composição elegante. Este trabalho é apresentado como estudo visual: a ficha do portfólio não confirma sua adoção definitiva ou publicação comercial.",
-        "en": "A visual identity proposal for a dental practice, featuring a monogram, rose and burgundy tones, and a refined composition. This is presented as a visual study: the portfolio record does not confirm final adoption or commercial publication."
+        "pt": "Site do consultório odontológico da Dra. Maria Marta Andrade, em Aracati–CE. A página reúne apresentação, tratamentos, localização e acesso ao WhatsApp para conversar sobre agendamentos. A imagem mostra o próprio site, com sua identidade em tons vinho rosado.",
+        "en": "Website for Dr. Maria Marta Andrade's dental practice in Aracati, Ceará. The page brings together an introduction, treatments, location and a WhatsApp link for appointment enquiries. The image shows the website itself and its rose and burgundy visual identity."
       },
       "tags": {
         "pt": [
-          "Identidade visual",
+          "Site institucional",
           "Odontologia",
-          "Proposta"
+          "Aracati, CE"
         ],
         "en": [
-          "Visual identity",
+          "Practice website",
           "Dentistry",
-          "Proposal"
+          "Aracati, Ceará"
         ]
       },
       "deliverables": {
         "pt": [
-          "Proposta de logo com monograma",
-          "Direção de cores vinho rosado",
-          "Composição para marca odontológica"
+          "Apresentação do consultório e tratamentos",
+          "Localização e informações de atendimento",
+          "Acesso ao WhatsApp para contato"
         ],
         "en": [
-          "Monogram logo proposal",
-          "Rose and burgundy color direction",
-          "Dental brand composition"
+          "Practice and treatment presentation",
+          "Location and opening information",
+          "WhatsApp contact access"
         ]
-      }
+      },
+      "url": "https://consultorio-odontologico-marta-andrade.pages.dev/"
     },
     {
       "id": "vertice",
@@ -399,7 +402,7 @@
       "hero.profileEducationValue": "Ciência da Computação · estudante",
       "hero.profileLocation": "Localização",
       "hero.profileBrand": "Marca",
-      "hero.photoAlt": "Marca ZAION Soluções Digitais",
+      "hero.photoAlt": "Foto de Zaion Araújo",
       "hero.printCV": "Imprimir resumo / PDF",
       "hero.rotating": [
         "Sites e landing pages que apresentam sua ideia.",
@@ -590,7 +593,7 @@
       "cv.print": "Imprimir / salvar como PDF",
       "footer.tagline": "Ideias em soluções reais.",
       "footer.location": "Aracati, Ceará · Brasil",
-      "footer.rights": "ZAION Soluções Digitais",
+      "footer.rights": "Zaion",
       "footer.source": "Código do portfólio",
       "footer.madeBy": "Criado por Zaion Araújo",
       "footer.colophon": "Design e desenvolvimento com identidade própria."
@@ -627,7 +630,7 @@
       "hero.profileEducationValue": "Computer Science · student",
       "hero.profileLocation": "Location",
       "hero.profileBrand": "Brand",
-      "hero.photoAlt": "ZAION Soluções Digitais brand",
+      "hero.photoAlt": "Portrait of Zaion Araújo",
       "hero.printCV": "Print profile / PDF",
       "hero.rotating": [
         "Websites and landing pages that introduce your idea.",
@@ -818,7 +821,7 @@
       "cv.print": "Print / save as PDF",
       "footer.tagline": "Ideas into real solutions.",
       "footer.location": "Aracati, Ceará · Brazil",
-      "footer.rights": "ZAION Soluções Digitais",
+      "footer.rights": "Zaion",
       "footer.source": "Portfolio source",
       "footer.madeBy": "Created by Zaion Araújo",
       "footer.colophon": "Design and development with an identity of their own."
