@@ -83,7 +83,7 @@ html:not(.app-ready) .site-header{position:relative}
 html:not(.app-ready) #nav-pill{display:none}
 /* Hero and personal identity */
 .hero{padding-top:35px;padding-bottom:29px;position:relative;isolation:isolate}
-.hero-atmosphere{position:absolute;z-index:-1;pointer-events:none;inset:-80px -120px -50px;background:radial-gradient(ellipse at 75% 35%,rgba(var(--accent-rgb),.09),transparent 48%);opacity:.95}
+.hero-atmosphere{position:absolute;z-index:-1;pointer-events:none;inset:-80px 0 -50px;background:radial-gradient(ellipse at 75% 35%,rgba(var(--accent-rgb),.09),transparent 48%);opacity:.95}
 .hero-atmosphere:after{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:64px 64px;opacity:.15;mask-image:radial-gradient(ellipse at 70% 40%,#000,transparent 62%);-webkit-mask-image:radial-gradient(ellipse at 70% 40%,#000,transparent 62%)}
 .hero-topline{display:flex;align-items:center;justify-content:space-between;gap:20px}
 .hero-eyebrow{font-size:9px;letter-spacing:.1em}

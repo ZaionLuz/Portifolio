@@ -51,6 +51,24 @@ async function noOverflow(page) {
     width: document.documentElement.scrollWidth,
     viewport: window.innerWidth
   }));
+  if (dimensions.width > dimensions.viewport + 1) {
+    const overflow = await page.evaluate(() => Array.from(document.querySelectorAll('body *'))
+      .map((element) => {
+        const rect = element.getBoundingClientRect();
+        const style = getComputedStyle(element);
+        return {
+          tag: element.tagName.toLowerCase(), id: element.id,
+          classes: typeof element.className === 'string' ? element.className : '',
+          left: Math.round(rect.left), right: Math.round(rect.right), width: Math.round(rect.width),
+          position: style.position, overflowX: style.overflowX,
+          parentOverflowX: element.parentElement ? getComputedStyle(element.parentElement).overflowX : null
+        };
+      })
+      .filter((entry) => entry.width > 0 && (entry.right > window.innerWidth + 1 || entry.left < -1))
+      .sort((a, b) => b.right - a.right)
+      .slice(0, 24));
+    console.log('PORTFOLIO_OVERFLOW=' + JSON.stringify({ ...dimensions, elements: overflow }));
+  }
   expect(dimensions.width).toBeLessThanOrEqual(dimensions.viewport + 1);
 }
 function logPreview(name, jpeg) {
@@ -256,7 +274,8 @@ test('a genuinely empty GitHub account is shown as empty, with no invented proje
   await expect(page.locator('.gh-source')).toHaveAttribute('data-source', 'live');
   await expect(page.locator('.gh-table [data-gh-repo]')).toHaveCount(0);
   await expect(page.locator('.gh-metric').first().locator('strong')).toHaveText('0');
-  await expect(page.locator('.gh-empty')).toBeVisible();
+  await expect(page.locator('.gh-table .gh-empty')).toBeVisible();
+  await expect(page.locator('.gh-chart .gh-empty')).toBeVisible();
 });
 test('no-JavaScript HTML remains readable and keeps projects, services and contact links', async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
@@ -282,6 +301,27 @@ test('reduced motion keeps content visible and suppresses intro and tilt', async
   const after = await target.evaluate((el) => [el.style.getPropertyValue('--tilt-x'), el.style.getPropertyValue('--tilt-y')]);
   expect(after).toEqual(before);
   await expect(page.locator('[data-project-card]').first()).toBeVisible();
+});
+test('normal motion finishes intro, bounds tilt and returns the identity card to rest', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await ready(page);
+  await expect(page.locator('html')).not.toHaveClass(/motion-reduced/);
+  await expect(page.locator('#intro')).not.toBeVisible();
+  const stage = page.locator('[data-tilt]').first();
+  const inner = page.locator('[data-tilt-inner]').first();
+  await stage.scrollIntoViewIfNeeded();
+  const bounds = await stage.boundingBox();
+  expect(bounds).not.toBeNull();
+  await page.mouse.move(bounds.x + bounds.width * 0.15, bounds.y + bounds.height * 0.2);
+  const angles = () => inner.evaluate((element) => [
+    parseFloat(element.style.getPropertyValue('--tilt-x')) || 0,
+    parseFloat(element.style.getPropertyValue('--tilt-y')) || 0
+  ]);
+  await expect.poll(async () => (await angles()).some((value) => Math.abs(value) > 0.1)).toBe(true);
+  await page.waitForTimeout(250);
+  for (const value of await angles()) expect(Math.abs(value)).toBeLessThanOrEqual(8.05);
+  await page.mouse.move(2, 2);
+  await expect.poll(async () => (await angles()).every((value) => Math.abs(value) < 0.08)).toBe(true);
 });
 test('all local images load and print mode contains the factual résumé', async ({ page }, testInfo) => {
   await ready(page);

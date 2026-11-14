@@ -69,6 +69,8 @@
     button.setAttribute("title", t(state.theme === "dark" ? "theme.toLight" : "theme.toDark"));
     button.setAttribute("aria-pressed", String(state.theme === "light"));
     var label = $("[data-theme-label]", button); if (label) setText(label, t("theme." + state.theme));
+    var icon = $("[data-theme-icon]", button);
+    if (icon) icon.innerHTML = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (state.theme === "dark" ? '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5"/>' : '<path d="M20.7 13A8.8 8.8 0 0 1 11 3.3a9 9 0 1 0 9.7 9.7Z"/>') + '</svg>';
   }
   function applyTheme(theme) {
     state.theme = choose(theme, ["dark", "light"], "dark");
@@ -422,6 +424,8 @@
     doc.documentElement.lang = state.lang === "pt" ? "pt-BR" : "en";
     doc.title = data.site.name + (state.lang === "pt" ? " — Desenvolvimento e Design" : " — Development & Design");
     translate(doc); updateCards(); updateClock(); resetWords(); themeButton(); motionButtons();
+    var currentCard = $("#identity-card");
+    if (currentCard) currentCard.setAttribute("aria-label", state.flipped ? L("Voltar à frente do cartão de Zaion", "Return to the front of Zaion's card") : t("hero.flipAria"));
     var languageButton = $("#language-toggle"); if (languageButton) { languageButton.setAttribute("aria-label", t("palette.switchLanguage")); languageButton.title = t("palette.switchLanguage"); setText($("[data-language-code], [data-language-label]",languageButton), state.lang.toUpperCase()); }
     if (state.project && state.dialog && state.dialog.id === "project-dialog") renderProject();
     if (state.dialog && state.dialog.id === "command-dialog") renderCommands();
