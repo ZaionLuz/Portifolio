@@ -7,7 +7,7 @@
   var TTL = 15 * 60 * 1000;
   var COLS = ["name", "language", "stars", "updated"];
   var DEFAULT_QUERY = "SELECT name, language, stars, updated FROM repos ORDER BY updated DESC";
-  var COLORS = { JavaScript: "#f2d76b", TypeScript: "#77a9f7", HTML: "#f78052", CSS: "#aa8be8", Luau: "#7cc9ea", Lua: "#8b9eef", Python: "#84c69a", Java: "#df9d69" };
+  var COLORS = { JavaScript: "#b045ff", TypeScript: "#c983ef", HTML: "#fa3dba", CSS: "#7523e0", Luau: "#ff315f", Lua: "#a678f3", Python: "#e36cab", Java: "#bf6aff" };
   var text = {
     pt: {
       title: "Código em movimento", subtitle: "Repositórios públicos de ZaionLuz",
@@ -150,7 +150,7 @@
     });
     var entries = Object.keys(data).map(function (key) { return { name: key, value: data[key] }; }).filter(function (e) { return e.value > 0; }).sort(function (a, b) { return b.value - a.value || a.name.localeCompare(b.name); });
     var total = entries.reduce(function (n, e) { return n + e.value; }, 0);
-    return entries.map(function (e, i) { return { name: e.name, value: e.value, percent: total ? e.value / total * 100 : 0, color: Object.prototype.hasOwnProperty.call(COLORS, e.name) ? COLORS[e.name] : ["#a6b2c7", "#d3b4a4", "#a0bdad", "#b6a5c8"][i % 4] }; });
+    return entries.map(function (e, i) { return { name: e.name, value: e.value, percent: total ? e.value / total * 100 : 0, color: Object.prototype.hasOwnProperty.call(COLORS, e.name) ? COLORS[e.name] : ["#b045ff", "#fa3dba", "#7523e0", "#ff315f"][i % 4] }; });
   }
   function sourceText() {
     var a = t();

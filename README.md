@@ -17,7 +17,9 @@ Portfólio estático da ZAION Soluções Digitais, em Aracati–CE. A interface 
 - Cópia do e-mail, preparação de mensagem no WhatsApp e resumo profissional imprimível em A4.
 - Conteúdo HTML legível sem JavaScript, animações pausadas quando fora da tela e respeito à preferência de movimento reduzido.
 
-Os trabalhos mantêm seus estágios: Helly Viagens é uma logo final, Maria Marta Andrade é uma proposta visual, Vértice Metal e Aurora Odontologia são demonstrações. As fichas não atribuem resultados comerciais ou vínculos não informados.
+Os trabalhos mantêm seus estágios: Helly Viagens é uma logo final, Maria Marta Andrade é um site publicado, Vértice Metal e Aurora Odontologia são demonstrações. As fichas não atribuem resultados comerciais ou vínculos não informados.
+
+A interface usa a paleta roxa, violeta, rosa e carmesim da Zaion. Os projetos aparecem sem caixas ou molduras opacas; as cores próprias das logos e das páginas apresentadas são mantidas. O rodapé mostra somente **Zaion**, sem ponto e sem o complemento comercial.
 
 ## Abrir e editar
 
@@ -36,7 +38,7 @@ Requer Node.js 22 ou posterior para o servidor e os testes. Abra http://127.0.0.
 - `js/motion.js`: revelações, contadores, spotlight, tilt e pausa das animações.
 - `js/github-dashboard.js`: leitura pública do GitHub, estados, cache e filtros.
 - `js/github-snapshot.js`: snapshot factual de metadados usado como alternativa offline.
-- `assets/`: logos, imagens dos trabalhos, favicon e imagem social preservados.
+- `assets/`: logos, imagens dos trabalhos, foto pessoal, favicon e imagem social. `zaion-portrait.png` é a mesma foto fornecida por Zaion, recuperada do seu avatar público original sem retoque. `marta-andrade-site.webp` é uma captura real do site publicado em 14/11/2026. A Helly usa o PNG original com transparência; a versão WebP antiga com fundo opaco não é exibida.
 
 Ao alterar contatos, projetos ou serviços, atualize os dados em `content.js` e os respectivos links/cartões e textos iniciais de `index.html`, para manter a versão sem JavaScript consistente. Os nomes dos projetos são fixos; as descrições, estados e serviços têm valores `pt` e `en`. Troque imagens por arquivos próprios e ajuste os atributos `alt`.
 
