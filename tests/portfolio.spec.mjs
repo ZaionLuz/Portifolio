@@ -153,7 +153,7 @@ for (const viewport of [
   test('layout remains usable at ' + viewport.width + 'px', async ({ page }) => {
     await page.setViewportSize(viewport);
     await ready(page);
-    await expect(page.locator('[data-project-card]')).toHaveCount(4);
+    await expect(page.locator('[data-project-card]')).toHaveCount(5);
     await expect(page.locator('[data-service-card]')).toHaveCount(8);
     await expect(page.locator('#header-github')).toBeVisible();
     await expect(page.locator('#language-toggle')).toBeVisible();
@@ -211,7 +211,7 @@ test('focus selection changes actual section and project reading order', async (
   await expect.poll(() => page.locator('#project-grid [data-project-card]').first().getAttribute('data-kind')).toBe('design');
   await page.locator('#focus-tabs [data-focus="all"]').click();
   await expect.poll(firstSection).toBe('about');
-  await expect(page.locator('#project-grid [data-project-card]:visible')).toHaveCount(4);
+  await expect(page.locator('#project-grid [data-project-card]:visible')).toHaveCount(5);
 });
 test('mobile menu has Escape dismissal, restored focus and working navigation', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -348,7 +348,7 @@ test('no-JavaScript HTML remains readable and keeps projects, services and conta
   const page = await context.newPage();
   await page.goto(BASE);
   await expect(page.locator('#home h1')).toBeVisible();
-  await expect(page.locator('[data-project-card]')).toHaveCount(4);
+  await expect(page.locator('[data-project-card]')).toHaveCount(5);
   await expect(page.locator('[data-service-card]')).toHaveCount(8);
   await expect(page.locator('a[href*="wa.me/5588997173005"]:visible').first()).toBeVisible();
   await expect(page.locator('#intro')).not.toBeVisible();
@@ -565,4 +565,18 @@ test('three rapid native theme toggles finish at the requested theme and clean u
   await page.waitForTimeout(700);
   expect(await themeColors(page)).toEqual(before);
   expect(consoleErrors).toEqual([]);
+});
+
+test('SeuDente demo is available with a working project link in both languages', async ({ page }) => {
+  await ready(page);
+  const card=page.locator('[data-project-card="seudente"]');
+  await expect(card).toBeVisible();
+  await card.locator('[data-project-open]').click();
+  await expect(page.locator('#project-dialog-title')).toHaveText('SeuDente');
+  await expect(page.locator('[data-project-visit]')).toHaveAttribute('href','https://zaionluz.github.io/Landing_Demo/');
+  await expect(page.locator('[data-project-visit]')).toHaveText(/Explorar demo/);
+  await page.keyboard.press('Escape');
+  await page.locator('#language-toggle').click();
+  await card.locator('[data-project-open]').click();
+  await expect(page.locator('[data-project-visit]')).toHaveText(/Explore demo/);
 });

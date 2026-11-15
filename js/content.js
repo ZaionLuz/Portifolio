@@ -137,6 +137,54 @@
       "url": "https://consultorio-odontologico-marta-andrade.pages.dev/"
     },
     {
+      "id": "seudente",
+      "kind": "web",
+      "title": "SeuDente",
+      "image": "assets/seudente-demo.jpg",
+      "imageAlt": {
+        "pt": "Captura real da landing page SeuDente, com fundo cyan e ilustração dental azul",
+        "en": "Actual screenshot of the SeuDente landing page, with a cyan background and blue dental illustration"
+      },
+      "statusCode": "demo",
+      "status": {
+        "pt": "Demo interativa",
+        "en": "Interactive demo"
+      },
+      "summary": {
+        "pt": "Uma landing page odontológica com direção de arte editorial, dois temas azuis e agendamento demonstrativo.",
+        "en": "An editorial dental landing page with two blue themes and a demonstration appointment flow."
+      },
+      "detail": {
+        "pt": "Projeto demonstrativo para a marca conceitual SeuDente. Reúne ilustração SVG original, tratamentos, perguntas frequentes e simulação de contato sem coleta de dados. O modo escuro combina dark cyan com letras azuis claras; o claro usa baby blue com letras azuis. Sem vínculo com uma clínica real.",
+        "en": "A demonstration project for the conceptual SeuDente brand. Includes original SVG artwork, treatments, FAQs and a contact simulation without data collection. Dark mode pairs dark cyan with light blue lettering; light mode pairs baby blue with blue lettering. Not affiliated with a real clinic."
+      },
+      "tags": {
+        "pt": [
+          "Landing page",
+          "Dois temas",
+          "Demo interativa"
+        ],
+        "en": [
+          "Landing page",
+          "Dual theme",
+          "Interactive demo"
+        ]
+      },
+      "deliverables": {
+        "pt": [
+          "Layout responsivo e ilustração SVG original",
+          "Temas persistentes e acessibilidade",
+          "Tratamentos, FAQ e fluxo de agendamento demo"
+        ],
+        "en": [
+          "Responsive layout and original SVG illustration",
+          "Persistent themes and accessibility",
+          "Treatments, FAQ and demo appointment flow"
+        ]
+      },
+      "url": "https://zaionluz.github.io/Landing_Demo/"
+    },
+    {
       "id": "vertice",
       "kind": "web",
       "title": "Vértice Metal",
