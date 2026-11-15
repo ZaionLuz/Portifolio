@@ -994,3 +994,11 @@ html.theme-switching,html.theme-switching *,html.theme-switching *::before,html.
 @media(max-width:380px){.portrait-portfolio .identity-column{width:calc(100% - 14px)}.portrait-portfolio .orb-skills{padding:23px;gap:8px}.orb-title{font-size:24px}.orb-tools-list>span{font-size:8px;padding:4px 5px}.orb-kicker{font-size:6px}.orb-spark{font-size:22px}}
 @media(prefers-reduced-motion:reduce){.portrait-portfolio .identity-flipper{transition:none}.portrait-halo{animation:none}}
 html.motion-reduced .portrait-halo{animation:none}
+
+.portrait-portfolio .hero-grid>*{min-width:0}
+@media(max-width:760px){
+ .portrait-portfolio .hero-grid{grid-template-columns:minmax(0,1fr)}
+ .portrait-portfolio .hero h1{display:flex;flex-wrap:wrap;gap:0 .18em}
+ .portrait-portfolio .hero h1>span{display:block;max-width:100%}
+ .portrait-portfolio .hero h1>span:nth-child(2):before{content:none}
+}

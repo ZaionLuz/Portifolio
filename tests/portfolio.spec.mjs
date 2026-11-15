@@ -66,7 +66,7 @@ async function noOverflow(page) {
       })
       .filter((entry) => entry.width > 0 && (entry.right > window.innerWidth + 1 || entry.left < -1))
       .sort((a, b) => b.right - a.right)
-      .slice(0, 24));
+      .slice(0, 100));
     console.log('PORTFOLIO_OVERFLOW=' + JSON.stringify({ ...dimensions, elements: overflow }));
   }
   expect(dimensions.width).toBeLessThanOrEqual(dimensions.viewport + 1);
