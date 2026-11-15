@@ -413,13 +413,15 @@ test('desktop review screenshots are captured in a real browser', async ({ page 
   await page.locator('#theme-toggle').click();
   await page.locator('#language-toggle').click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-  logPreview('LIGHTVIOLET', await page.screenshot({type:'jpeg',quality:45,animations:'disabled'}));
+  logPreview('LIGHTCRIMSONPINK', await page.screenshot({type:'jpeg',quality:45,animations:'disabled'}));
   await page.screenshot({ path: testInfo.outputPath('desktop-light-en-1440.png'), fullPage: true, animations: 'disabled' });
   await page.setViewportSize({ width: 1100, height: 780 });
   await page.locator('#home').scrollIntoViewIfNeeded();
   const jpeg = await page.screenshot({ path: testInfo.outputPath('desktop-review.jpg'), type: 'jpeg', quality: 35, animations: 'disabled' });
   logPreview('DESKTOP', jpeg);
   await page.setViewportSize({ width: 1200, height: 1000 });
+  await page.locator('#stack').scrollIntoViewIfNeeded();
+  logPreview('STACKLIGHT', await page.screenshot({type:'jpeg',quality:55,animations:'disabled'}));
   await page.locator('#projects').scrollIntoViewIfNeeded();
   logPreview('PROJECTS', await page.screenshot({ type:'jpeg', quality:45, animations:'disabled' }));
   await page.locator('.site-footer').scrollIntoViewIfNeeded();
@@ -468,6 +470,8 @@ test('brand is only Z, profile button points to the account and footer omits por
   });
   expect(visibleBrand).toBe('Z');
   await expect(page.locator('.header-wordmark .accent-text')).toHaveCount(0);
+  await expect(page.locator('.stack-core')).toHaveText('Z');
+  await expect(page.locator('.stack-core span')).toHaveCount(0);
   const github = page.locator('#header-github');
   await expect(github).toBeVisible();
   await expect(github).toHaveAttribute('href', 'https://github.com/ZaionLuz');
