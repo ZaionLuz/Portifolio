@@ -1002,3 +1002,16 @@ html.motion-reduced .portrait-halo{animation:none}
  .portrait-portfolio .hero h1>span{display:block;max-width:100%}
  .portrait-portfolio .hero h1>span:nth-child(2):before{content:none}
 }
+
+/* Keep the decorative ring's rotated bounds inside its own circular viewport. */
+.portrait-halo-window{position:absolute;inset:-24px;border-radius:50%;overflow:hidden;pointer-events:none}
+.portrait-halo{inset:8px}
+.portrait-halo:before{inset:8px;rotate:0;transform:none}
+.portrait-portfolio .identity-static strong,.portrait-portfolio .identity-static>span{display:none}
+.orb-tools-list>span{font-size:12px}
+.orb-learning>span{font-size:12px}
+.orb-kicker{font-size:9px}
+.orb-learning small{font-size:8px}
+.orb-caption{font-size:10px}
+@media(max-width:760px){.orb-tools-list>span{font-size:10px}.orb-learning>span{font-size:10px}.orb-kicker{font-size:7px}.orb-caption{font-size:9px}}
+@media(max-width:380px){.orb-tools-list>span{font-size:9px}.orb-learning>span{font-size:9px}.orb-kicker{font-size:6px}}
