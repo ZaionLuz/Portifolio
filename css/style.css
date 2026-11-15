@@ -11,7 +11,7 @@
 }
 html[data-theme="light"]{
  --bg:#f5dbe3;--surface:#fbe7ed;--surface-2:#edc4d1;--surface-3:#e5adbf;--ink:#36121f;--muted:#75394f;--muted-2:#7e4056;--line:#d29aaf;--line-strong:#a15b74;
- --brand-gradient:linear-gradient(105deg,#b01649 4%,#c42c59 53%,#9e2046 100%);--accent:#b01649;--accent-bright:#b82052;--accent-rgb:176,22,73;--button-ink:#fff;
+ --brand-gradient:linear-gradient(105deg,#b01649 4%,#c42c59 53%,#9e2046 100%);--accent:#93123a;--accent-bright:#b01649;--accent-rgb:147,18,58;--button-ink:#fff;
  --terminal:#edc4d1;--terminal-ink:#3e1525;--terminal-muted:#75394f;--success:#982045;--error:#a2143e;
  --primary-gradient:linear-gradient(115deg,#9f1239,#b31747 48%,#9c1e3b);--primary-hover-gradient:linear-gradient(115deg,#b11740,#bd1b4c 48%,#ad2749);
  --profile-gradient:linear-gradient(145deg,#76172f,#a3163f 56%,#bf234a);--action-bg:#9f1239;--action-hover:#b11740;--photo-rgb:16,6,9;--photo-accent:#ffc1d0;
