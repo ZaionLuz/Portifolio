@@ -14,7 +14,7 @@ html[data-theme="light"]{
  --brand-gradient:linear-gradient(105deg,#542477 4%,#70318e 53%,#602582 100%);--accent:#542477;--accent-bright:#602582;--accent-rgb:84,36,119;--button-ink:#f0bdd3;--action-ink:#edc4ff;
  --terminal:#dfa0bf;--terminal-ink:#542477;--terminal-muted:#653481;--success:#542477;--error:#8d1b54;
  --primary-gradient:linear-gradient(115deg,#642249,#722751 48%,#642249);--primary-hover-gradient:linear-gradient(115deg,#722751,#7c2a58 48%,#722751);
- --profile-gradient:linear-gradient(145deg,#76172f,#a3163f 56%,#bf234a);--action-bg:#9f1239;--action-hover:#b11740;--photo-rgb:16,6,9;--photo-accent:#ffc1d0;
+ --profile-gradient:linear-gradient(145deg,#551940,#722751 56%,#642249);--action-bg:#642249;--action-hover:#722751;--photo-rgb:57,13,39;--photo-accent:#e6b4ff;
  --chart-1:#b01649;--chart-2:#cd3f68;--chart-3:#9d2349;--chart-4:#d66b89;--chart-5:#7d1f3d;--chart-6:#b84d6d;--chart-7:#a13759;--chart-8:#db8da4;color-scheme:light
 }
 *{box-sizing:border-box}
@@ -306,7 +306,7 @@ html:not(.app-ready) #nav-pill{display:none}
 .gh-query{display:block;width:100%;min-height:124px;resize:vertical;border:1px solid var(--line-strong);background:var(--terminal);color:var(--terminal-ink);border-radius:10px;font:400 11px/1.8 var(--mono);padding:17px;tab-size:2;caret-color:var(--accent)}
 .gh-query:focus-visible{outline-color:var(--accent-bright);outline-offset:3px}
 .gh-query::placeholder{color:var(--terminal-muted)}
-.gh-run{justify-self:start;background:var(--action-bg);border-color:var(--action-bg);color:#fff}
+.gh-run{justify-self:start;background:var(--action-bg);border-color:var(--action-bg);color:var(--action-ink)}
 .gh-run:hover{background:var(--action-hover);border-color:var(--action-hover)}
 .gh-presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
 .gh-preset,.gh-chip{font:400 9px/1.4 var(--mono);min-height:30px;padding:6px 9px;background:transparent;border-color:var(--line)}
@@ -884,7 +884,7 @@ html.motion-reduced .identity-card{transform:none!important}
 
 
 /* The portrait and project artwork are presented directly, without rectangular mats. */
-.identity-front{background:var(--surface);color:#fff}
+.identity-front{background:var(--surface);color:var(--action-ink)}
 .identity-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 35%;z-index:0}
 .identity-photo-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(var(--photo-rgb),.32),transparent 35%,rgba(var(--photo-rgb),.08) 56%,rgba(var(--photo-rgb),.87));pointer-events:none;z-index:1}
 .identity-portrait-spacer{display:block;flex:1;min-height:0}
