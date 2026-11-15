@@ -9,6 +9,7 @@
   var returnFocus = new Map(), timers = {}, sectionObserver = null, heroObserver = null, scrollFrame = 0;
   var themeTransition = null, themeAnimation = null, themeTarget = null, themeVersion = 0, wordIndex = 0, wordList = [], unlockStyles = null;
   var reduceMedia = null, themeMedia = null, explicitTheme = false;
+  var orbHovered = false, orbFocused = false, orbVisible = true;
   function normalise(value) { return String(value == null ? "" : value).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim(); }
   function escapeHTML(value) { return String(value == null ? "" : value).replace(/[&<>"']/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]; }); }
   function choose(value, allowed, fallback) { var v = typeof value === "string" ? value.toLowerCase() : ""; return allowed.indexOf(v) >= 0 ? v : fallback; }
@@ -175,7 +176,7 @@
     if (global.ZaionMotion) global.ZaionMotion.setReduced(state.reduced);
     if (state.reduced && themeTransition && typeof themeTransition.skipTransition === "function") themeTransition.skipTransition();
     if (state.reduced) hideIntro();
-    motionButtons(); resetWords();
+    motionButtons(); resetWords(); scheduleOrb();
   }
   function toggleMotion() {
     if (state.osReduced) { toast(L("A preferência de movimento reduzido do sistema está ativa.", "Your system's reduced-motion preference is active.")); return; }
@@ -453,7 +454,28 @@
     var front = $("[data-card-front]",card), back = $("[data-card-back]",card);
     if (front) front.setAttribute("aria-hidden", String(state.flipped));
     if (back) back.setAttribute("aria-hidden", String(!state.flipped));
-    card.setAttribute("aria-label", state.flipped ? L("Voltar à frente do cartão de Zaion", "Return to the front of Zaion's card") : t("hero.flipAria"));
+    card.setAttribute("aria-label", state.flipped ? L("Girar para voltar à minha foto", "Rotate back to my photo") : t("hero.flipAria"));    scheduleOrb();
+  }
+  function scheduleOrb() {
+    global.clearTimeout(timers.orb);
+    if (!doc || state.reduced || doc.hidden || !orbVisible || orbHovered || orbFocused) return;
+    timers.orb = global.setTimeout(function () {
+      if (!state.dialog && !state.reduced && !doc.hidden && orbVisible && !orbHovered && !orbFocused) flipCard();
+      else scheduleOrb();
+    }, 11000);
+  }
+  function initOrb() {
+    var orb = $("#identity-card"); if (!orb) return;
+    orb.addEventListener("mouseenter", function () { orbHovered=true; scheduleOrb(); });
+    orb.addEventListener("mouseleave", function () { orbHovered=false; scheduleOrb(); });
+    orb.addEventListener("focus", function () { orbFocused=true; scheduleOrb(); });
+    orb.addEventListener("blur", function () { orbFocused=false; scheduleOrb(); });
+    doc.addEventListener("visibilitychange", scheduleOrb);
+    if (typeof global.IntersectionObserver === "function") {
+      var observer=new global.IntersectionObserver(function(entries) { orbVisible=entries[0].isIntersecting; scheduleOrb(); }, {threshold:.15});
+      observer.observe(orb);
+    }
+    scheduleOrb();
   }
   function renderFormStatus() {
     var root = $("#form-status"); if (!root || !state.formStatus) return;
@@ -489,7 +511,7 @@
     doc.title = data.site.name + (state.lang === "pt" ? " — Desenvolvimento e Design" : " — Development & Design");
     translate(doc); updateCards(); updateClock(); resetWords(); themeButton(); motionButtons();
     var currentCard = $("#identity-card");
-    if (currentCard) currentCard.setAttribute("aria-label", state.flipped ? L("Voltar à frente do cartão de Zaion", "Return to the front of Zaion's card") : t("hero.flipAria"));
+    if (currentCard) currentCard.setAttribute("aria-label", state.flipped ? L("Girar para voltar à minha foto", "Rotate back to my photo") : t("hero.flipAria"));
     var languageButton = $("#language-toggle");
     if (languageButton) {
       var destination = state.lang === "pt" ? "en" : "pt";
@@ -571,7 +593,7 @@
     var name=$("#contact-name"); if(name)name.maxLength=80;
     setLanguage(state.lang,false); setFocus(state.focus,false);
     if(global.ZaionMotion)global.ZaionMotion.init({reduced:state.reduced});
-    refreshMotion(); startClock();
+    refreshMotion(); startClock(); initOrb();
     if(typeof global.IntersectionObserver==="function") {
       heroObserver=new global.IntersectionObserver(function(entries){entries.forEach(function(entry){state.heroVisible=entry.isIntersecting;if(state.heroVisible)resetWords();else stopWords();});},{threshold:0.05});
       var hero=$("#home");if(hero)heroObserver.observe(hero);

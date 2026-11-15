@@ -346,9 +346,9 @@
       "hero.ctaContact": "Conversar sobre uma ideia",
       "hero.location": "Aracati, Ceará · Brasil",
       "hero.clock": "em Aracati, CE",
-      "hero.flip": "Virar cartão",
-      "hero.flipAria": "Virar o cartão e conhecer o perfil de Zaion",
-      "hero.profile": "Perfil",
+      "hero.flip": "Voltar à foto",
+      "hero.flipAria": "Girar o retrato e descobrir minhas ferramentas",
+      "hero.profile": "Ferramentas",
       "hero.profileName": "Nome",
       "hero.profileWork": "Áreas",
       "hero.profileWorkValue": "Desenvolvimento · Design digital",
@@ -554,7 +554,12 @@
       "header.githubAria": "Abrir perfil de Zaion no GitHub",
       "language.toEnglish": "Ver todo o site em inglês",
       "language.toPortuguese": "Ver todo o site em português",
-      "language.switch": "Trocar o idioma do site"
+      "language.switch": "Trocar o idioma do site",
+      "orb.tools": "FERRAMENTAS QUE USO",
+      "orb.title": "Do visual ao código.",
+      "orb.learning": "EM ESTUDO",
+      "orb.hint": "Retrato de um lado. Ideias do outro.",
+      "orb.manual": "Toque no círculo para explorar."
     },
     "en": {
       "nav.home": "Home",
@@ -578,9 +583,9 @@
       "hero.ctaContact": "Talk about an idea",
       "hero.location": "Aracati, Ceará · Brazil",
       "hero.clock": "in Aracati, Brazil",
-      "hero.flip": "Flip card",
-      "hero.flipAria": "Flip the card to learn about Zaion",
-      "hero.profile": "Profile",
+      "hero.flip": "Back to photo",
+      "hero.flipAria": "Rotate the portrait to explore my tools",
+      "hero.profile": "Tools",
       "hero.profileName": "Name",
       "hero.profileWork": "Areas",
       "hero.profileWorkValue": "Development · Digital design",
@@ -786,7 +791,12 @@
       "header.githubAria": "Open Zaion's GitHub profile",
       "language.toEnglish": "View the entire website in English",
       "language.toPortuguese": "View the entire website in Portuguese",
-      "language.switch": "Switch the website language"
+      "language.switch": "Switch the website language",
+      "orb.tools": "TOOLS I USE",
+      "orb.title": "From visuals to code.",
+      "orb.learning": "LEARNING",
+      "orb.hint": "My portrait on one side. Ideas on the other.",
+      "orb.manual": "Tap the circle to explore."
     }
   }
 };

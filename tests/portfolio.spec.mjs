@@ -228,7 +228,7 @@ test('mobile menu has Escape dismissal, restored focus and working navigation', 
   await expect.poll(() => new URL(page.url()).hash).toBe('#projects');
   await noOverflow(page);
 });
-test('identity card flips by keyboard without breaking the reduced-motion layout', async ({ page }) => {
+test('circular portrait reveals tools by keyboard with reduced motion', async ({ page }) => {
   await ready(page);
   const card = page.locator('#identity-card');
   await card.focus();
@@ -356,38 +356,39 @@ test('no-JavaScript HTML remains readable and keeps projects, services and conta
   await noOverflow(page);
   await context.close();
 });
-test('reduced motion keeps content visible and suppresses intro and tilt', async ({ page }) => {
+test('reduced motion keeps the portrait still while manual controls work', async ({ page }) => {
   await ready(page);
   await expect(page.locator('html')).toHaveClass(/motion-reduced/);
-  await expect(page.locator('#intro')).not.toBeVisible();
-  const target = page.locator('[data-tilt-inner]').first();
-  const before = await target.evaluate((el) => [el.style.getPropertyValue('--tilt-x'), el.style.getPropertyValue('--tilt-y')]);
-  await target.hover({ position: { x: 12, y: 12 } });
-  await page.waitForTimeout(250);
-  const after = await target.evaluate((el) => [el.style.getPropertyValue('--tilt-x'), el.style.getPropertyValue('--tilt-y')]);
-  expect(after).toEqual(before);
-  await expect(page.locator('[data-project-card]').first()).toBeVisible();
+  const orb=page.locator('#identity-card');
+  await expect(orb).toHaveCSS('border-radius','50%');
+  await expect(page.locator('.portrait-halo')).toHaveCSS('animation-name','none');
+  await page.waitForTimeout(400);
+  await expect(orb).toHaveAttribute('aria-pressed','false');
+  await orb.click();
+  await expect(orb).toHaveAttribute('aria-pressed','true');
+  await expect(page.locator('[data-card-back]')).toHaveAttribute('aria-hidden','false');
+  await expect(page.locator('.orb-tools-list')).toContainText('JavaScript');
+  await expect(page.locator('.orb-learning')).toContainText('Python');
 });
-test('normal motion finishes intro, bounds tilt and returns the identity card to rest', async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'no-preference' });
+test('portrait rotates automatically and pauses on focus and reduced motion', async ({ page }) => {
+  test.setTimeout(45000);
+  await page.emulateMedia({ reducedMotion:'no-preference' });
   await ready(page);
-  await expect(page.locator('html')).not.toHaveClass(/motion-reduced/);
   await expect(page.locator('#intro')).not.toBeVisible();
-  const stage = page.locator('[data-tilt]').first();
-  const inner = page.locator('[data-tilt-inner]').first();
-  await stage.scrollIntoViewIfNeeded();
-  const bounds = await stage.boundingBox();
-  expect(bounds).not.toBeNull();
-  await page.mouse.move(bounds.x + bounds.width * 0.15, bounds.y + bounds.height * 0.2);
-  const angles = () => inner.evaluate((element) => [
-    parseFloat(element.style.getPropertyValue('--tilt-x')) || 0,
-    parseFloat(element.style.getPropertyValue('--tilt-y')) || 0
-  ]);
-  await expect.poll(async () => (await angles()).some((value) => Math.abs(value) > 0.1)).toBe(true);
-  await page.waitForTimeout(250);
-  for (const value of await angles()) expect(Math.abs(value)).toBeLessThanOrEqual(8.05);
-  await page.mouse.move(2, 2);
-  await expect.poll(async () => (await angles()).every((value) => Math.abs(value) < 0.08)).toBe(true);
+  const orb=page.locator('#identity-card');
+  await expect(orb).toHaveAttribute('aria-pressed','true',{timeout:14000});
+  await orb.focus();
+  await page.clock.install();
+  await page.clock.fastForward(24000);
+  await expect(orb).toHaveAttribute('aria-pressed','true');
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await expect(page.locator('html')).toHaveClass(/motion-reduced/);
+  await orb.evaluate(el=>el.blur());
+  await page.clock.fastForward(24000);
+  await expect(orb).toHaveAttribute('aria-pressed','true');
+  await orb.focus();
+  await page.keyboard.press('Enter');
+  await expect(orb).toHaveAttribute('aria-pressed','false');
 });
 test('all local images load and print mode contains the factual résumé', async ({ page }, testInfo) => {
   await ready(page);
@@ -415,6 +416,9 @@ test('desktop review screenshots are captured in a real browser', async ({ page 
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   logPreview('LIGHTCRIMSONPINK', await page.screenshot({type:'jpeg',quality:45,animations:'disabled'}));
   await page.screenshot({ path: testInfo.outputPath('desktop-light-en-1440.png'), fullPage: true, animations: 'disabled' });
+  await page.locator('#identity-card').click();
+  logPreview('ORBSKILLS', await page.screenshot({type:'jpeg',quality:60,animations:'disabled'}));
+  await page.locator('#identity-card').click();
   await page.setViewportSize({ width: 1100, height: 780 });
   await page.locator('#home').scrollIntoViewIfNeeded();
   const jpeg = await page.screenshot({ path: testInfo.outputPath('desktop-review.jpg'), type: 'jpeg', quality: 35, animations: 'disabled' });

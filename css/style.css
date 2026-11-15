@@ -926,3 +926,71 @@ html.theme-switching,html.theme-switching *,html.theme-switching *::before,html.
 .gh-segment:nth-child(8n+6),.gh-item:nth-child(8n+6) .gh-swatch{background:var(--chart-6)}
 .gh-segment:nth-child(8n+7),.gh-item:nth-child(8n+7) .gh-swatch{background:var(--chart-7)}
 .gh-segment:nth-child(8n+8),.gh-item:nth-child(8n+8) .gh-swatch{background:var(--chart-8)}
+
+/* Portrait-led identity: a circular lens with a second face for tools. */
+.portrait-portfolio .desktop-nav{background:transparent;border:0;padding:0;gap:5px;border-radius:0}
+.portrait-portfolio #nav-pill{display:none}
+.portrait-portfolio .desktop-nav .nav-link{padding:12px 9px}
+.portrait-portfolio .desktop-nav .nav-link:after{content:"";position:absolute;left:9px;right:9px;bottom:4px;height:1px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .25s}
+.portrait-portfolio .desktop-nav .nav-link.is-active:after,.portrait-portfolio .desktop-nav .nav-link:hover:after{transform:scaleX(1)}
+.portrait-portfolio .hero-atmosphere{background:radial-gradient(ellipse at 22% 50%,rgba(var(--accent-rgb),.11),transparent 52%)}
+.portrait-portfolio .hero-atmosphere:after{display:none}
+.portrait-portfolio .hero-grid{grid-template-columns:minmax(0,.95fr) minmax(0,1.25fr);gap:100px;padding-block:80px 70px}
+.portrait-portfolio .hero-copy{grid-column:2;grid-row:1}
+.portrait-portfolio .hero h1{font-size:clamp(4.4rem,8vw,7.3rem);letter-spacing:-.075em;line-height:.94}
+.portrait-portfolio .hero h1>span:nth-child(2){margin-top:0}
+.portrait-portfolio .hero-name-note{max-width:360px;letter-spacing:.035em;border-left:1px solid var(--accent);padding-left:14px}
+.portrait-portfolio .hero-rotating{margin-top:24px;min-height:48px}
+.portrait-portfolio .hero-description{max-width:510px}
+.portrait-portfolio .identity-column{grid-column:1;grid-row:1;max-width:410px;width:100%;padding:24px 20px 0}
+.portrait-portfolio .identity-stage{max-width:370px;width:100%;perspective:1200px}
+.portrait-portfolio .portrait-orb{width:100%;aspect-ratio:1;border-radius:50%;transform:none!important;outline-offset:12px}
+.portrait-portfolio .identity-flipper{border-radius:50%;transition:transform 2.4s cubic-bezier(.45,0,.2,1)}
+.portrait-portfolio .identity-face{border-radius:50%;border:1px solid var(--line-strong);box-shadow:0 18px 65px rgba(var(--accent-rgb),.10)}
+.portrait-portfolio .identity-front{background:var(--surface);overflow:hidden}
+.portrait-portfolio .identity-photo{object-position:50% 34%;border-radius:50%}
+.portrait-halo{position:absolute;inset:-15px;border:1px dashed var(--line-strong);border-radius:50%;opacity:.65;animation:portrait-revolve 70s linear infinite;pointer-events:none}
+.portrait-halo:before{content:"";position:absolute;inset:-9px 15px;border:1px solid var(--line);border-radius:50%;rotate:-20deg}
+.portrait-halo:after{content:"";position:absolute;left:15%;top:10%;height:9px;width:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 18px rgba(var(--accent-rgb),.5)}
+.portrait-portfolio .orb-skills{display:flex;align-items:center;justify-content:center;text-align:center;padding:38px 35px;background:radial-gradient(circle at 30% 20%,var(--surface-3),var(--surface));color:var(--ink);gap:12px}
+.orb-spark{font-size:28px;line-height:1;color:var(--accent)}
+.orb-kicker{font:500 8px/1.5 var(--mono);letter-spacing:.15em;color:var(--muted)}
+.orb-title{font-size:29px;font-weight:550;line-height:1.05;letter-spacing:-.055em;max-width:190px}
+.orb-tools-list{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:7px;max-width:270px;margin-top:2px}
+.orb-tools-list>span{font-size:10px;line-height:1.4;padding:5px 9px;border-bottom:1px solid var(--line-strong);color:var(--ink);white-space:nowrap}
+.orb-learning{display:grid;gap:4px;margin-top:2px}
+.orb-learning small{font:400 7px/1.5 var(--mono);letter-spacing:.13em;color:var(--muted)}
+.orb-learning>span{font-size:10px}
+.orb-controls{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:28px;position:relative}
+.orb-caption{font:400 9px/1.6 var(--mono);color:var(--muted);text-align:center}
+.orb-pause{min-height:32px;min-width:32px;padding:6px}
+.orb-pause .icon{width:12px;height:12px}
+.orb-manual{font-size:9px;color:var(--muted);text-align:center;margin-top:0}
+.portrait-portfolio .identity-under{padding-top:20px;justify-content:center;gap:0 20px}
+.portrait-portfolio .identity-static img{border-radius:50%;aspect-ratio:1;max-height:370px}
+.portrait-portfolio .stack-core{border-radius:50%;border:1px solid var(--accent);box-shadow:0 0 35px rgba(var(--accent-rgb),.1)}
+@keyframes portrait-revolve{to{transform:rotate(360deg)}}
+@media(max-width:1100px){
+ .portrait-portfolio .hero-grid{gap:55px;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}
+ .portrait-portfolio .hero h1{font-size:clamp(4rem,8vw,6.4rem)}
+ .portrait-portfolio .identity-column{padding-inline:16px}
+ .portrait-portfolio .orb-skills{padding:28px 25px;gap:9px}
+ .orb-title{font-size:26px}.orb-tools-list{gap:4px}.orb-tools-list>span{font-size:9px;padding:4px 6px}.orb-spark{font-size:24px}
+}
+@media(max-width:760px){
+ .portrait-portfolio .hero-grid{grid-template-columns:1fr;gap:38px;padding-block:40px 35px}
+ .portrait-portfolio .hero-copy{grid-column:1;grid-row:2}
+ .portrait-portfolio .identity-column{grid-column:1;grid-row:1;max-width:340px;width:calc(100% - 24px);padding:16px 15px 0}
+ .portrait-portfolio .hero h1{font-size:clamp(3.9rem,13vw,6rem)}
+ .portrait-portfolio .hero h1>span{display:inline}
+ .portrait-portfolio .hero h1>span:nth-child(2):before{content:" "}
+ .portrait-portfolio .hero-name-note{margin-bottom:20px;max-width:none}
+ .portrait-portfolio .hero-rotating{margin-top:20px;min-height:36px}
+ .portrait-portfolio .identity-under{padding-top:10px;gap:0 14px}
+ .orb-controls{margin-top:22px}.orb-caption{font-size:8px}.orb-manual{font-size:8px}
+ .portrait-portfolio .orb-skills{padding:27px;gap:9px}
+ .orb-title{font-size:25px;max-width:165px}.orb-kicker{font-size:7px}.orb-tools-list{max-width:220px}.orb-tools-list>span{font-size:9px}.orb-learning{gap:3px}.orb-learning>span{font-size:9px}
+}
+@media(max-width:380px){.portrait-portfolio .identity-column{width:calc(100% - 14px)}.portrait-portfolio .orb-skills{padding:23px;gap:8px}.orb-title{font-size:24px}.orb-tools-list>span{font-size:8px;padding:4px 5px}.orb-kicker{font-size:6px}.orb-spark{font-size:22px}}
+@media(prefers-reduced-motion:reduce){.portrait-portfolio .identity-flipper{transition:none}.portrait-halo{animation:none}}
+html.motion-reduced .portrait-halo{animation:none}
